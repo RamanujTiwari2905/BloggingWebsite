@@ -4,11 +4,13 @@ const cookieparser = require("cookie-parser");
 require('dotenv').config();
 const main = require('./config/db')
 const authRouter = require('./routes/userAuthentication')
+const postRouter = require('./routes/postRoutes')
 
 
 app.use(express.json());
 app.use(cookieparser());
 app.use('/user',authRouter);
+app.use("/api/posts",postRouter);
 
 
 const InitalizeConnection = async ()=>{

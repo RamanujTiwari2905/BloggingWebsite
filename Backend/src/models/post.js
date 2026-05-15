@@ -22,7 +22,6 @@ const postSchema = new Schema({
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
 },{
     timestamps: true,

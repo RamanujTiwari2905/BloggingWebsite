@@ -16,6 +16,8 @@ const userMiddleware = async (req,res,next)=>{
         if(!result)
             throw new Error("User Doesn't Exist");
 
+        req.user = payload;
+
         next();
     }
     catch(err)
