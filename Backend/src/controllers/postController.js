@@ -75,4 +75,43 @@ const getSinglePost = async(req,res)=>{
     }
 }
 
-module.exports = {getAllPosts, getSinglePost ,createPost};
+const updatePost = async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const {title, content, category} = req.body;
+        const post = await Post.findById(id);
+
+        if(!post){
+            res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        if(post.author.toString() !== req.user._id){
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized"
+            })
+        }
+
+        post.title = title || post.title;
+        post.content = content || post.content;
+        post.category = category || post.category;
+
+        await post.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Post updated successfully",
+            post
+        })
+    }catch(err){
+        res.status(500).json({
+            success: false,
+            error: err.message
+        })
+    }
+}
+
+module.exports = {getAllPosts, getSinglePost, updatePost ,createPost};
