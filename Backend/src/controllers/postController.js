@@ -114,4 +114,38 @@ const updatePost = async(req,res)=>{
     }
 }
 
-module.exports = {getAllPosts, getSinglePost, updatePost ,createPost};
+const deletePost = async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const post = await Post.findById(id);
+
+        if(!post){
+            res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        if(post.author.toString() !== req.user._id){
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized"
+            })
+        }
+
+        await post.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: "Post deleted successfully",
+            post
+        })
+    }catch(err){
+        res.status(500).json({
+            success: false,
+            error: err.message
+        })
+    }
+}
+
+module.exports = {getAllPosts, getSinglePost, updatePost, deletePost ,createPost};
