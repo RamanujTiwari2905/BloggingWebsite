@@ -31,4 +31,23 @@ const createPost = async (req,res)=>{
     }
 }
 
-module.exports = {createPost};
+const getAllPosts = async(req,res)=>{
+    try{
+        const posts = await Post.find()
+        .sort({createdAt: -1})
+        .populate("author", "firstName");
+
+        res.status(200).json({
+            success: true,
+            count: posts.length,
+            posts,
+        })
+    }catch(err){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+module.exports = {getAllPosts, createPost};
